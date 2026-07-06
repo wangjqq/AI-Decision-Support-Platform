@@ -1,0 +1,80 @@
+server:
+  port: 8013
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: aidsp-web
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/aidsp?useUnicode=true&characterEncoding=utf-8&useSSL=false&serverTimezone=Asia/Shanghai
+    username: aidsp
+    password: aidsp123
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  ai:
+    openai:
+      api-key: ${OPENAI_API_KEY:placeholder-key}
+      base-url: ${OPENAI_BASE_URL:https://api.openai.com/v1}
+      chat:
+        options:
+          model: gpt-4o-mini
+
+# MyBatis-Plus
+mybatis-plus:
+  mapper-locations: classpath*:mapper/**/*.xml
+  type-aliases-package: com.aidsp.platform.*.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+  global-config:
+    db-config:
+      id-type: ASSIGN_ID
+      logic-delete-field: deleted
+      logic-delete-value: 1
+      logic-not-delete-value: 0
+
+# Knife4j
+knife4j:
+  enable: true
+  setting:
+    language: zh_cn
+  openapi:
+    title: AI Decision Support Platform API
+    description: 决策支持平台接口文档
+    version: 1.0.0
+    concat: architect@aidsp.com
+
+springdoc:
+  api-docs:
+    enabled: true
+    path: /v3/api-docs
+  swagger-ui:
+    enabled: true
+    path: /swagger-ui.html
+
+# Dubbo
+dubbo:
+  application:
+    name: aidsp-web
+    qos-enable: false
+  protocol:
+    name: tri
+    port: -1
+  registry:
+    address: N/A
+  consumer:
+    check: false
+    timeout: 5000
+  scan:
+    base-packages: com.aidsp.platform
+
+# Logging
+logging:
+  level:
+    com.aidsp.platform: DEBUG
+    org.apache.dubbo: INFO
+    com.baomidou.mybatisplus: INFO
+  pattern:
+    console: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n'

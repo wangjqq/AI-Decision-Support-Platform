@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.3.4</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.aidsp.platform</groupId>
+    <artifactId>aidsp-platform</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>aidsp-platform</name>
+    <description>AI Decision Support Platform</description>
+
+    <modules>
+        <module>aidsp-core</module>
+        <module>aidsp-sys/aidsp-sys-api</module>
+        <module>aidsp-sys/aidsp-sys-service</module>
+        <module>aidsp-company/aidsp-company-api</module>
+        <module>aidsp-company/aidsp-company-service</module>
+        <module>aidsp-industry/aidsp-industry-api</module>
+        <module>aidsp-industry/aidsp-industry-service</module>
+        <module>aidsp-report/aidsp-report-api</module>
+        <module>aidsp-report/aidsp-report-service</module>
+        <module>aidsp-agent/aidsp-agent-api</module>
+        <module>aidsp-agent/aidsp-agent-service</module>
+        <module>aidsp-knowledge/aidsp-knowledge-api</module>
+        <module>aidsp-knowledge/aidsp-knowledge-service</module>
+        <module>aidsp-rag/aidsp-rag-api</module>
+        <module>aidsp-rag/aidsp-rag-service</module>
+        <module>aidsp-adapter</module>
+        <module>aidsp-web</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <spring-boot.version>3.3.4</spring-boot.version>
+        <dubbo.version>3.3.0</dubbo.version>
+        <mybatis-plus.version>3.5.9</mybatis-plus.version>
+        <knife4j.version>4.5.0</knife4j.version>
+        <spring-ai.version>1.0.0-M6</spring-ai.version>
+        <mysql-connector.version>8.4.0</mysql-connector.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Spring Boot BOM -->
+            <dependency>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-dependencies</artifactId>
+                <version>${spring-boot.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Dubbo BOM -->
+            <dependency>
+                <groupId>org.apache.dubbo</groupId>
+                <artifactId>dubbo-bom</artifactId>
+                <version>${dubbo.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- MyBatis-Plus -->
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-spring-boot3-starter</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baomidou</groupId>
+                <artifactId>mybatis-plus-jsqlparser</artifactId>
+                <version>${mybatis-plus.version}</version>
+            </dependency>
+
+            <!-- Knife4j -->
+            <dependency>
+                <groupId>com.github.xiaoymin</groupId>
+                <artifactId>knife4j-openapi3-jakarta-spring-boot-starter</artifactId>
+                <version>${knife4j.version}</version>
+            </dependency>
+
+            <!-- Spring AI -->
+            <dependency>
+                <groupId>org.springframework.ai</groupId>
+                <artifactId>spring-ai-bom</artifactId>
+                <version>${spring-ai.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- MySQL Connector -->
+            <dependency>
+                <groupId>com.mysql</groupId>
+                <artifactId>mysql-connector-j</artifactId>
+                <version>${mysql-connector.version}</version>
+            </dependency>
+
+            <!-- Aidsp modules -->
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-sys-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-sys-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-company-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-company-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-industry-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-industry-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-report-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-report-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-agent-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-agent-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-knowledge-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-knowledge-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-rag-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-rag-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-adapter</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>

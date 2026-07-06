@@ -1,0 +1,84 @@
+version: '3.9'
+
+# 一键起 MySQL 8.0 + Redis 7 + Apache Artemis 三件套
+# 遵循 docs/architecture.md §1.3 部署拓扑
+
+services:
+  # ---------------- MySQL 8.0 主库 ----------------
+  mysql:
+    image: mysql:8.0
+    container_name: aidsp-mysql
+    restart: unless-stopped
+    ports:
+      - '3306:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: aidsp
+      MYSQL_USER: aidsp
+      MYSQL_PASSWORD: aidsp123
+      TZ: Asia/Shanghai
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+      - --default-authentication-plugin=mysql_native_password
+    volumes:
+      - ./scripts/mysql-data:/var/lib/mysql
+      - ./scripts/schema.sql:/docker-entrypoint-initdb.d/01-schema.sql:ro
+    healthcheck:
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - aidsp-net
+
+  # ---------------- Redis 7 缓存 ----------------
+  redis:
+    image: redis:7-alpine
+    container_name: aidsp-redis
+    restart: unless-stopped
+    ports:
+      - '6379:6379'
+    environment:
+      TZ: Asia/Shanghai
+    command: --requirepass redis123 --appendonly yes
+    volumes:
+      - ./scripts/redis-data:/data
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    networks:
+      - aidsp-net
+
+  # ---------------- Apache Artemis MQ ----------------
+  artemis:
+    image: apache/artemis:latest-alpine
+    container_name: aidsp-artemis
+    restart: unless-stopped
+    ports:
+      - '8161:8161' # Web Console
+      - '61616:61616' # Broker (OpenWire / STOMP / AMQP)
+    environment:
+      ARTEMIS_USER: aidsp
+      ARTEMIS_PASSWORD: artemis123
+      ARTEMIS_EXTRA_ARGS: '--http-host 0.0.0.0 --relax-jolokia'
+      TZ: Asia/Shanghai
+    volumes:
+      - ./scripts/artemis-data:/var/lib/artemis/data
+    healthcheck:
+      test: ['CMD-SHELL', 'curl -f http://localhost:8161 || exit 1']
+      interval: 15s
+      timeout: 10s
+      retries: 10
+      start_period: 30s
+    networks:
+      - aidsp-net
+
+networks:
+  aidsp-net:
+    name: aidsp-net
+    driver: bridge
