@@ -1,0 +1,35 @@
+
+> aidsp-frontend@0.1.0 dev C:\Code\AI-Decision-Support-Platform\frontend
+> vite
+
+
+  [32m[1mVITE[22m v5.4.21[39m  [2mready in [0m[1m505[22m[2m[0m ms[22m
+
+  [32m➜[39m  [1mLocal[22m:   [36mhttp://localhost:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.31.150:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.198.1:[1m5173[22m/[39m
+  [32m➜[39m  [1mNetwork[22m: [36mhttp://192.168.40.1:[1m5173[22m/[39m
+[2m[32m  ➜[39m[22m[2m  press [22m[1mh + enter[22m[2m to show help[22m
+[2m22:42:44[22m [36m[1m[vite][22m[39m [32m.env.local changed, restarting server...[39m
+[2m22:42:44[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/api/agentApi.ts[22m
+[2m22:42:44[22m [36m[1m[vite][22m[39m server restarted.
+[2m22:44:01[22m [36m[1m[vite][22m[39m [32mvite.config.js changed, restarting server...[39m
+[2m22:44:03[22m [36m[1m[vite][22m[39m server restarted.
+[WARNING] You need to put code-inspector-plugin before @vitejs/plugin-react in the vite config file.
+[2m22:57:33[22m [36m[1m[vite][22m[39m [32mvite.config.ts changed, restarting server...[39m
+Re-optimizing dependencies because vite config has changed
+[2m22:57:33[22m [36m[1m[vite][22m[39m server restarted.
+[2m22:59:06[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/v1/reports?page=1&size=20&keyword=[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m22:59:08[22m [31m[1m[vite][22m[39m [31mhttp proxy error: /api/v1/companies?page=1&size=20&keyword=[39m
+AggregateError [ECONNREFUSED]: 
+    at internalConnectMultiple (node:net:1134:18)
+    at afterConnectMultiple (node:net:1715:7)
+[2m23:00:30[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/stores/slices/companySlice.ts[22m
+[2m23:00:38[22m [36m[1m[vite][22m[39m [32mpage reload [39m[2msrc/stores/slices/companySlice.ts[22m
+[2m23:01:57[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/company/CompanyDetailPage.tsx[22m
+[2m23:02:01[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/company/CompanyDetailPage.tsx[22m
+[2m23:02:07[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/company/CompanyListPage.tsx[22m
+[2m23:02:11[22m [36m[1m[vite][22m[39m [32mhmr update [39m[2m/src/pages/company/CompanyListPage.tsx[22m

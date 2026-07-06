@@ -66,6 +66,7 @@ const ReportListPage = () => {
 
   return (
     <Card
+      className="glass-card"
       title="报告列表"
       extra={
         <Space>

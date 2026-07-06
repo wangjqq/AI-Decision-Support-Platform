@@ -18,6 +18,7 @@ const IndustryDetailPage = () => {
 
   return (
     <Card
+      className="glass-card"
       title={`行业详情 #${id}`}
       extra={
         <Space>

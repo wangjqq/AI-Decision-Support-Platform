@@ -52,6 +52,10 @@
         </dependency>
         <dependency>
             <groupId>com.aidsp.platform</groupId>
+            <artifactId>aidsp-analysis-service</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.aidsp.platform</groupId>
             <artifactId>aidsp-adapter</artifactId>
         </dependency>
 

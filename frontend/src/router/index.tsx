@@ -9,6 +9,7 @@ import IndustryListPage from '../pages/industry/IndustryListPage';
 import IndustryDetailPage from '../pages/industry/IndustryDetailPage';
 import ReportListPage from '../pages/report/ReportListPage';
 import ReportDetailPage from '../pages/report/ReportDetailPage';
+import SearchPage from '../pages/search/SearchPage';
 
 /**
  * 路由表
@@ -28,6 +29,7 @@ export const router = createBrowserRouter([
       { path: 'industries/:id', element: <IndustryDetailPage /> },
       { path: 'reports', element: <ReportListPage /> },
       { path: 'reports/:id', element: <ReportDetailPage /> },
+      { path: 'search', element: <SearchPage /> },
       { path: '*', element: <NotFound /> },
     ],
   },

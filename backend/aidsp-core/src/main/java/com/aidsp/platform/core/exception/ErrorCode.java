@@ -14,6 +14,7 @@ import lombok.Getter;
  *   <li>4xxx 报告模块</li>
  *   <li>5xxx Agent / AI 错误</li>
  *   <li>6xxx 知识库 / RAG 错误</li>
+ *   <li>7xxx 智能分析 / 调度错误</li>
  *   <li>9xxx 第三方服务错误</li>
  * </ul>
  */
@@ -32,6 +33,11 @@ public enum ErrorCode {
 
     // 2xxx 公司模块
     COMPANY_NOT_FOUND(2001, "公司不存在"),
+    COMPANY_NAME_DUPLICATE(2002, "公司名称已存在"),
+    COMPANY_ANALYSIS_NOT_FOUND(2003, "公司分析记录不存在"),
+    COMPANY_INDUSTRY_NOT_FOUND(2004, "关联行业不存在"),
+    COMPANY_PARAM_INVALID(2005, "公司参数校验失败"),
+    COMPANY_CONFLICT(2006, "公司数据冲突"),
 
     // 3xxx 行业模块
     INDUSTRY_NOT_FOUND(3001, "行业不存在"),
@@ -43,7 +49,12 @@ public enum ErrorCode {
     AGENT_RUN_FAILED(5000, "Agent 执行失败"),
 
     // 6xxx 知识库 / RAG 错误
-    KNOWLEDGE_NOT_FOUND(6001, "知识不存在");
+    KNOWLEDGE_NOT_FOUND(6001, "知识不存在"),
+
+    // 7xxx 智能分析 / 调度错误
+    ANALYSIS_QUERY_EMPTY(7001, "分析请求 query 不能为空"),
+    ANALYSIS_TYPE_UNRESOLVED(7002, "无法识别分析意图"),
+    ANALYSIS_TIMEOUT(7003, "分析处理超时");
 
     private final int code;
     private final String msg;

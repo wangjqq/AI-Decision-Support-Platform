@@ -18,6 +18,7 @@ const ReportDetailPage = () => {
 
   return (
     <Card
+      className="glass-card"
       title={`报告详情 #${id}`}
       extra={
         <Space>

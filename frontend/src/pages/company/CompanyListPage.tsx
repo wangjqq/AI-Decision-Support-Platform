@@ -1,52 +1,96 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card, Table, Input, Space, Button, type TableProps } from 'antd'
-import { SearchOutlined, EyeOutlined } from '@ant-design/icons'
-import { useGetCompaniesQuery } from '../../api/companyApi'
+import { Card, Table, Input, Space, Button, Popconfirm, type TableProps, App } from 'antd'
+import {
+  SearchOutlined,
+  EyeOutlined,
+  PlusOutlined,
+  EditOutlined,
+  DeleteOutlined,
+  ReloadOutlined,
+} from '@ant-design/icons'
+import { useDeleteCompanyMutation, useGetCompaniesQuery, type CompanyVO } from '../../api/companyApi'
 import { formatDateTime } from '../../utils/format'
+import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { openCreateEditor, openEditEditor } from '../../stores/slices/companySlice'
+import CompanyCreateModal from './components/CompanyCreateModal'
 
-interface CompanyRow {
-  id: number
-  name: string
-  industryName?: string
-  updatedAt?: string
-}
-
-/** 公司列表页：表格 + 顶部搜索框，操作列跳详情（占位数据） */
+/** 公司列表页：表格 + 顶部搜索框 + 增/改/删（接入 RTK Query 强类型） */
 const CompanyListPage = () => {
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
+  const { message } = App.useApp()
+
+  const [page, setPage] = useState(1)
+  const [size, setSize] = useState(20)
   const [keyword, setKeyword] = useState('')
+  const [searchKeyword, setSearchKeyword] = useState('')
 
-  // 调用 RTK Query；后端未就绪时静默处理（占位 skeleton）
-  const { data, isFetching, error } = useGetCompaniesQuery({ page: 1, size: 20, keyword })
+  const { data, isFetching, refetch } = useGetCompaniesQuery({ page, size, keyword: searchKeyword })
+  const [deleteCompany, { isLoading: deleting }] = useDeleteCompanyMutation()
 
-  // 后端尚未就绪时显示占位空数据
-  const list: CompanyRow[] = (data as { list?: CompanyRow[] } | undefined)?.list ?? []
+  const list: CompanyVO[] = data?.list ?? []
+  const total = data?.total ?? 0
 
-  const columns: TableProps<CompanyRow>['columns'] = [
-    { title: 'ID', dataIndex: 'id', key: 'id', width: 100 },
-    { title: '公司名称', dataIndex: 'name', key: 'name' },
-    { title: '所属行业', dataIndex: 'industryName', key: 'industryName' },
+  const handleDelete = async (id: number) => {
+    try {
+      await deleteCompany(id).unwrap()
+      message.success('已删除')
+    } catch {
+      // 错误已由 baseQuery 拦截 toast
+    }
+  }
+
+  const columns: TableProps<CompanyVO>['columns'] = [
+    { title: 'ID', dataIndex: 'id', key: 'id', width: 80 },
+    { title: '公司名称', dataIndex: 'name', key: 'name', ellipsis: true },
+    {
+      title: '所属行业',
+      dataIndex: 'industryName',
+      key: 'industryName',
+      width: 120,
+      render: (v: string | undefined) => v ?? '-',
+    },
+    { title: '主营业务', dataIndex: 'mainBusiness', key: 'mainBusiness', ellipsis: true },
     {
       title: '更新时间',
       dataIndex: 'updatedAt',
       key: 'updatedAt',
-      render: (v: string) => formatDateTime(v),
+      width: 170,
+      render: (v: string | undefined) => formatDateTime(v),
     },
     {
       title: '操作',
       key: 'action',
-      width: 120,
+      width: 200,
+      fixed: 'right',
       render: (_v, record) => (
-        <Button type="link" icon={<EyeOutlined />} onClick={() => navigate(`/companies/${record.id}`)}>
-          查看
-        </Button>
+        <Space size={4}>
+          <Button type="link" size="small" icon={<EyeOutlined />} onClick={() => navigate(`/companies/${record.id}`)}>
+            查看
+          </Button>
+          <Button type="link" size="small" icon={<EditOutlined />} onClick={() => dispatch(openEditEditor(record))}>
+            编辑
+          </Button>
+          <Popconfirm
+            title="确认删除该公司？"
+            description="删除后不可恢复，相关分析记录也会失效"
+            okText="删除"
+            cancelText="取消"
+            okButtonProps={{ danger: true }}
+            onConfirm={() => handleDelete(record.id)}>
+            <Button type="link" size="small" danger icon={<DeleteOutlined />} loading={deleting}>
+              删除
+            </Button>
+          </Popconfirm>
+        </Space>
       ),
     },
   ]
 
   return (
     <Card
+      className="glass-card"
       title="公司列表"
       extra={
         <Space>
@@ -56,19 +100,48 @@ const CompanyListPage = () => {
             prefix={<SearchOutlined />}
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
+            onPressEnter={() => {
+              setSearchKeyword(keyword)
+              setPage(1)
+            }}
             style={{ width: 240 }}
           />
-          <Button type="primary">新增公司</Button>
+          <Button
+            icon={<SearchOutlined />}
+            onClick={() => {
+              setSearchKeyword(keyword)
+              setPage(1)
+            }}>
+            搜索
+          </Button>
+          <Button icon={<ReloadOutlined />} onClick={() => refetch()} />
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => dispatch(openCreateEditor())}>
+            新增公司
+          </Button>
         </Space>
       }>
-      <Table<CompanyRow>
+      <Table<CompanyVO>
         rowKey="id"
         loading={isFetching}
         columns={columns}
         dataSource={list}
-        pagination={{ pageSize: 20, showSizeChanger: true, showTotal: (t) => `共 ${t} 条` }}
-        locale={{ emptyText: error ? '后端暂未就绪或网络异常' : '暂无数据' }}
+        scroll={{ x: 1000 }}
+        pagination={{
+          current: page,
+          pageSize: size,
+          total,
+          showSizeChanger: true,
+          showTotal: (t) => `共 ${t} 条`,
+          onChange: (p, s) => {
+            setPage(p)
+            setSize(s)
+          },
+        }}
+        locale={{ emptyText: '暂无数据' }}
       />
+
+      {/* 新增/编辑 Modal（受 store 全局控制） */}
+      <CompanyCreateModal />
     </Card>
   )
 }

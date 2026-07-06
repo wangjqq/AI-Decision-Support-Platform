@@ -1,10 +1,17 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import path from 'node:path'
+import { codeInspectorPlugin } from 'code-inspector-plugin'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    // code-inspector-plugin 必须在 react 之前（插件会做 transform 拦截）
+    codeInspectorPlugin({
+      bundler: 'vite',
+    }),
+    react(),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

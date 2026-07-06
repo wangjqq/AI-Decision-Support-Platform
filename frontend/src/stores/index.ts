@@ -2,23 +2,29 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query'
 
 import appReducer from './slices/appSlice'
+import searchReducer from './slices/searchSlice'
+import companyReducer from './slices/companySlice'
 import { companyApi } from '../api/companyApi'
 import { industryApi } from '../api/industryApi'
 import { reportApi } from '../api/reportApi'
 import { agentApi } from '../api/agentApi'
+import { analysisApi } from '../api/analysisApi'
 
 /**
  * 全局 Redux store
- * - 合并 appSlice（UI 状态）
+ * - 合并 appSlice / searchSlice / companySlice（UI 状态）
  * - 注册各业务域的 RTK Query reducer / middleware
  */
 export const store = configureStore({
   reducer: {
     app: appReducer,
+    search: searchReducer,
+    company: companyReducer,
     [companyApi.reducerPath]: companyApi.reducer,
     [industryApi.reducerPath]: industryApi.reducer,
     [reportApi.reducerPath]: reportApi.reducer,
     [agentApi.reducerPath]: agentApi.reducer,
+    [analysisApi.reducerPath]: analysisApi.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
@@ -30,7 +36,8 @@ export const store = configureStore({
       .concat(companyApi.middleware)
       .concat(industryApi.middleware)
       .concat(reportApi.middleware)
-      .concat(agentApi.middleware),
+      .concat(agentApi.middleware)
+      .concat(analysisApi.middleware),
 })
 
 // 启用 refetchOnFocus / refetchOnReconnect 等行为

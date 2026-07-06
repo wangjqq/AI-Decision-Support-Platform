@@ -34,6 +34,8 @@
         <module>aidsp-knowledge/aidsp-knowledge-service</module>
         <module>aidsp-rag/aidsp-rag-api</module>
         <module>aidsp-rag/aidsp-rag-service</module>
+        <module>aidsp-analysis/aidsp-analysis-api</module>
+        <module>aidsp-analysis/aidsp-analysis-service</module>
         <module>aidsp-adapter</module>
         <module>aidsp-web</module>
     </modules>
@@ -181,6 +183,16 @@
             <dependency>
                 <groupId>com.aidsp.platform</groupId>
                 <artifactId>aidsp-rag-service</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-analysis-api</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.aidsp.platform</groupId>
+                <artifactId>aidsp-analysis-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

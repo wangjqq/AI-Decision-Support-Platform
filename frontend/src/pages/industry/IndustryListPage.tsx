@@ -46,6 +46,7 @@ const IndustryListPage = () => {
 
   return (
     <Card
+      className="glass-card"
       title="行业列表"
       extra={
         <Space>
