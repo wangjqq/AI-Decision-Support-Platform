@@ -3,6 +3,7 @@ package com.aidsp.platform.company.service;
 import com.aidsp.platform.analysis.api.AnalysisQueryRequest;
 import com.aidsp.platform.analysis.api.AnalysisResultDTO;
 import com.aidsp.platform.analysis.api.AnalysisType;
+import com.aidsp.platform.analysis.util.NanoId;
 import com.aidsp.platform.company.agent.CompanyAnalysisAgent;
 import com.aidsp.platform.company.api.CompanyAnalysisHistoryItemVO;
 import com.aidsp.platform.company.api.CompanyAnalysisRequest;
@@ -133,6 +134,6 @@ public class CompanyAnalysisService {
     }
 
     private String buildAnalysisId() {
-        return "ca-" + LocalDate.now().format(DATE_FMT) + "-" + com.aidsp.platform.analysis.util.NanoId.nanoId(12);
+        return "ca-" + LocalDate.now().format(DATE_FMT) + "-" + NanoId.nanoId(12);
     }
 }

@@ -1,6 +1,6 @@
 package com.aidsp.platform.analysis.service;
 
-import com.aidsp.platform.analysis.agent.AnalysisAgent;
+import com.aidsp.platform.analysis.api.AnalysisAgent;
 import com.aidsp.platform.analysis.api.AnalysisQueryRequest;
 import com.aidsp.platform.analysis.api.AnalysisResultDTO;
 import com.aidsp.platform.analysis.api.AnalysisType;

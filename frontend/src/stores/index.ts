@@ -4,6 +4,7 @@ import { setupListeners } from '@reduxjs/toolkit/query'
 import appReducer from './slices/appSlice'
 import searchReducer from './slices/searchSlice'
 import companyReducer from './slices/companySlice'
+import industryReducer from './slices/industrySlice'
 import { companyApi } from '../api/companyApi'
 import { industryApi } from '../api/industryApi'
 import { reportApi } from '../api/reportApi'
@@ -12,7 +13,7 @@ import { analysisApi } from '../api/analysisApi'
 
 /**
  * 全局 Redux store
- * - 合并 appSlice / searchSlice / companySlice（UI 状态）
+ * - 合并 appSlice / searchSlice / companySlice / industrySlice（UI 状态）
  * - 注册各业务域的 RTK Query reducer / middleware
  */
 export const store = configureStore({
@@ -20,6 +21,7 @@ export const store = configureStore({
     app: appReducer,
     search: searchReducer,
     company: companyReducer,
+    industry: industryReducer,
     [companyApi.reducerPath]: companyApi.reducer,
     [industryApi.reducerPath]: industryApi.reducer,
     [reportApi.reducerPath]: reportApi.reducer,

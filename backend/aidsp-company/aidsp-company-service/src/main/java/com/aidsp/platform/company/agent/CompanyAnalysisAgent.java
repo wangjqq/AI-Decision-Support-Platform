@@ -1,5 +1,6 @@
 package com.aidsp.platform.company.agent;
 
+import com.aidsp.platform.analysis.api.AnalysisAgent;
 import com.aidsp.platform.analysis.api.AnalysisQueryRequest;
 import com.aidsp.platform.analysis.api.AnalysisResultDTO;
 import com.aidsp.platform.analysis.api.AnalysisType;
@@ -16,7 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 /**
  * 公司分析 Agent（Mock 实现）。
- * <p>实现 {@link com.aidsp.platform.analysis.api.AnalysisAgent} 接口，
+ * <p>实现 {@link AnalysisAgent} 接口，
  * <code>supports() = COMPANY</code>，由 {@code OrchestratorDispatcher} 扫描注册。
  * <p>输入：用户的自然语言 query（如"分析宁德时代"），会从 query 文本中尽量匹配"宁德"/"比亚迪"等公司名作为模拟对象。
  * <p>输出：标准的 {@link AnalysisResultDTO}，<code>result</code> 字段是 5 维度结构（overview / mainBusiness / advantages / risks / aiConclusion）。
@@ -24,7 +25,7 @@ import java.util.concurrent.ThreadLocalRandom;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class CompanyAnalysisAgent implements com.aidsp.platform.analysis.api.AnalysisAgent {
+public class CompanyAnalysisAgent implements AnalysisAgent {
 
     private final CompanyMapper companyMapper;
 

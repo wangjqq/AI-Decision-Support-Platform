@@ -11,7 +11,7 @@ import {
 } from '@ant-design/icons'
 import { useDeleteCompanyMutation, useGetCompaniesQuery, type CompanyVO } from '../../api/companyApi'
 import { formatDateTime } from '../../utils/format'
-import { useAppDispatch, useAppSelector } from '../../hooks/redux'
+import { useAppDispatch } from '../../hooks/redux'
 import { openCreateEditor, openEditEditor } from '../../stores/slices/companySlice'
 import CompanyCreateModal from './components/CompanyCreateModal'
 

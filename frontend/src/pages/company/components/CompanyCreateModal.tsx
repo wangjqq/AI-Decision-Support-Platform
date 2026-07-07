@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
-import { Modal, Form, Input, DatePicker, Select, InputNumber, message } from 'antd'
-import { useCreateCompanyMutation, useUpdateCompanyMutation, type CompanyCreateRequest, type CompanyUpdateRequest, type CompanyVO } from '../../../api/companyApi'
+import { Modal, Form, Input, DatePicker, Select, message } from 'antd'
+import { useCreateCompanyMutation, useUpdateCompanyMutation, type CompanyCreateRequest, type CompanyUpdateRequest } from '../../../api/companyApi'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import { closeEditor } from '../../../stores/slices/companySlice'
 import dayjs, { type Dayjs } from 'dayjs'

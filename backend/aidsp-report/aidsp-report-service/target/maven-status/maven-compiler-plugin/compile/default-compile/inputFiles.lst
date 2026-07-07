@@ -1,2 +1,9 @@
+D:\code\AI-Decision-Support-Platform\backend\aidsp-report\aidsp-report-service\src\main\java\com\aidsp\platform\report\agent\ReportGenerationAgent.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-report\aidsp-report-service\src\main\java\com\aidsp\platform\report\controller\ReportController.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-report\aidsp-report-service\src\main\java\com\aidsp\platform\report\entity\Report.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-report\aidsp-report-service\src\main\java\com\aidsp\platform\report\entity\ReportReference.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-report\aidsp-report-service\src\main\java\com\aidsp\platform\report\entity\ReportSection.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-report\aidsp-report-service\src\main\java\com\aidsp\platform\report\entity\ReportTocItem.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-report\aidsp-report-service\src\main\java\com\aidsp\platform\report\repository\ReportRepository.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-report\aidsp-report-service\src\main\java\com\aidsp\platform\report\service\ReportMapper.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-report\aidsp-report-service\src\main\java\com\aidsp\platform\report\service\ReportServiceImpl.java

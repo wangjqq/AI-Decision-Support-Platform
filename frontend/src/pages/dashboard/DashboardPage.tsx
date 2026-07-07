@@ -1,4 +1,4 @@
-import { Row, Col, Card, Statistic, Space, Progress, Tag } from 'antd'
+import { Row, Col, Card, Space, Progress, Tag } from 'antd'
 import {
   BankOutlined,
   AppstoreOutlined,

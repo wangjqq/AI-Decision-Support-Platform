@@ -2,7 +2,7 @@ import { Card, List, Tag, Button, Space, Typography, Popconfirm, Empty, Skeleton
 import { ClockCircleOutlined, DeleteOutlined, HistoryOutlined, FileTextOutlined } from '@ant-design/icons'
 import type { CompanyAnalysisHistoryItem } from '../../../api/companyApi'
 
-const { Text, Title } = Typography
+const { Text } = Typography
 
 export interface CompanyAnalysisHistoryProps {
   items: CompanyAnalysisHistoryItem[]

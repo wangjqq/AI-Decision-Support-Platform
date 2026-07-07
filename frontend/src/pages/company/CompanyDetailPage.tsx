@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useParams, useNavigate } from 'react-router-dom'
-import { Card, Button, Space, Skeleton, Result, App, Row, Col, Tag } from 'antd'
+import { Card, Button, Space, Result, App, Row, Col, Tag } from 'antd'
 import { ArrowLeftOutlined, BankOutlined } from '@ant-design/icons'
 import {
   useGetCompanyByIdQuery,
@@ -53,7 +53,7 @@ const CompanyDetailPage = () => {
 
   const [analyzeCompany, { isLoading: analyzing, error: analyzeError }] = useAnalyzeCompanyMutation()
 
-  const [deleteAnalysis, { isLoading: deletingId }] = useDeleteCompanyAnalysisMutation()
+  const [deleteAnalysis] = useDeleteCompanyAnalysisMutation()
 
   // 当前展示的 5 维度结果（优先级：当前结果 > picked 历史详情）
   const currentAnalysis = useAppSelector((s) => s.company.currentAnalysis)

@@ -1,2 +1,10 @@
+D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\agent\CompanyAnalysisAgent.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\controller\CompanyController.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\entity\Company.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\entity\CompanyAnalysisResult.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\repository\CompanyAnalysisRepository.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\repository\CompanyRepository.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\repository\CompanySeedData.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\service\CompanyAnalysisService.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\service\CompanyMapper.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\service\CompanyServiceImpl.java

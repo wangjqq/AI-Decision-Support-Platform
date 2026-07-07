@@ -9,15 +9,16 @@ import {
   AimOutlined,
   BulbOutlined,
   FileTextOutlined,
-  type AntdIconProps,
 } from '@ant-design/icons'
-import type { ComponentType } from 'react'
+import type { ComponentProps, ComponentType } from 'react'
 import type { CompanyDimension } from '../../../api/companyApi'
 
 const { Title, Paragraph, Text } = Typography
 
+type IconComponent = ComponentType<ComponentProps<typeof BankOutlined>>
+
 /** icon name → Ant Design 组件 */
-const ICON_MAP: Record<string, ComponentType<AntdIconProps>> = {
+const ICON_MAP: Record<string, IconComponent> = {
   BankOutlined,
   AppstoreOutlined,
   TrophyOutlined,

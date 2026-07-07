@@ -41,6 +41,11 @@ public enum ErrorCode {
 
     // 3xxx 行业模块
     INDUSTRY_NOT_FOUND(3001, "行业不存在"),
+    INDUSTRY_NAME_DUPLICATE(3002, "行业名称已存在"),
+    INDUSTRY_CODE_DUPLICATE(3003, "行业编码已存在"),
+    INDUSTRY_ANALYSIS_NOT_FOUND(3004, "行业分析记录不存在"),
+    INDUSTRY_PARAM_INVALID(3005, "行业参数校验失败"),
+    INDUSTRY_CONFLICT(3006, "行业数据冲突"),
 
     // 4xxx 报告模块
     REPORT_NOT_FOUND(4001, "报告不存在"),

@@ -1,8 +1,4 @@
-package com.aidsp.platform.analysis.agent;
-
-import com.aidsp.platform.analysis.api.AnalysisQueryRequest;
-import com.aidsp.platform.analysis.api.AnalysisResultDTO;
-import com.aidsp.platform.analysis.api.AnalysisType;
+package com.aidsp.platform.analysis.api;
 
 /**
  * 领域分析 Agent 抽象。
