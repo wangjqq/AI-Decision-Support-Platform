@@ -1,5 +1,5 @@
 import { createApi } from '@reduxjs/toolkit/query/react'
-import { createRestResponseBaseQuery, type RestResponse } from './http'
+import { createRestResponseBaseQuery, type RestResponse, unwrapRestResponse } from './http'
 
 /** 公司分页查询参数 */
 export interface CompanyPageParams {
@@ -146,13 +146,8 @@ export const companyApi = createApi({
         url: 'companies',
         params: { page, size, keyword, industryId },
       }),
-      transformResponse: (raw: RestResponse<CompanyPageResponse> | CompanyPageResponse) => {
-        // 容错：若 baseQuery 已解包则直接返回，否则从 RestResponse.data 取
-        if (raw && typeof raw === 'object' && 'code' in raw) {
-          return (raw as RestResponse<CompanyPageResponse>).data ?? { list: [], total: 0, page: 1, size: 20, pages: 0 }
-        }
-        return raw as CompanyPageResponse
-      },
+      transformResponse: (raw: RestResponse<CompanyPageResponse> | CompanyPageResponse) =>
+        unwrapRestResponse(raw) ?? { list: [], total: 0, page: 1, size: 20, pages: 0 },
       providesTags: (result) =>
         result
           ? [
@@ -165,36 +160,21 @@ export const companyApi = createApi({
     // 详情
     getCompanyById: build.query<CompanyVO, number>({
       query: (id) => ({ url: `companies/${id}` }),
-      transformResponse: (raw: RestResponse<CompanyVO> | CompanyVO) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
-          return (raw as RestResponse<CompanyVO>).data as CompanyVO
-        }
-        return raw as CompanyVO
-      },
+      transformResponse: (raw: RestResponse<CompanyVO> | CompanyVO) => unwrapRestResponse(raw),
       providesTags: (_result, _error, id) => [{ type: 'Company' as const, id }],
     }),
 
     // 新增
     createCompany: build.mutation<CompanyVO, CompanyCreateRequest>({
       query: (body) => ({ url: 'companies', method: 'POST', body }),
-      transformResponse: (raw: RestResponse<CompanyVO> | CompanyVO) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
-          return (raw as RestResponse<CompanyVO>).data as CompanyVO
-        }
-        return raw as CompanyVO
-      },
+      transformResponse: (raw: RestResponse<CompanyVO> | CompanyVO) => unwrapRestResponse(raw),
       invalidatesTags: [{ type: 'Company', id: 'LIST' }],
     }),
 
     // 更新
     updateCompany: build.mutation<CompanyVO, { id: number; body: CompanyUpdateRequest }>({
       query: ({ id, body }) => ({ url: `companies/${id}`, method: 'PUT', body }),
-      transformResponse: (raw: RestResponse<CompanyVO> | CompanyVO) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
-          return (raw as RestResponse<CompanyVO>).data as CompanyVO
-        }
-        return raw as CompanyVO
-      },
+      transformResponse: (raw: RestResponse<CompanyVO> | CompanyVO) => unwrapRestResponse(raw),
       invalidatesTags: (_result, _error, { id }) => [
         { type: 'Company', id },
         { type: 'Company', id: 'LIST' },
@@ -217,12 +197,7 @@ export const companyApi = createApi({
         method: 'POST',
         body: body ?? {},
       }),
-      transformResponse: (raw: RestResponse<CompanyAnalysisResult> | CompanyAnalysisResult) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
-          return (raw as RestResponse<CompanyAnalysisResult>).data as CompanyAnalysisResult
-        }
-        return raw as CompanyAnalysisResult
-      },
+      transformResponse: (raw: RestResponse<CompanyAnalysisResult> | CompanyAnalysisResult) => unwrapRestResponse(raw),
       invalidatesTags: (_result, _error, { id }) => [{ type: 'CompanyAnalysis', id: `LIST-${id}` }],
     }),
 
@@ -235,32 +210,21 @@ export const companyApi = createApi({
         url: `companies/${id}/analyses`,
         params: { page, size },
       }),
-      transformResponse: (raw: RestResponse<CompanyAnalysisHistoryResponse> | CompanyAnalysisHistoryResponse) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
-          return (
-            (raw as RestResponse<CompanyAnalysisHistoryResponse>).data ?? {
-              list: [],
-              total: 0,
-              page: 1,
-              size: 20,
-              pages: 0,
-            }
-          )
-        }
-        return raw as CompanyAnalysisHistoryResponse
-      },
+      transformResponse: (raw: RestResponse<CompanyAnalysisHistoryResponse> | CompanyAnalysisHistoryResponse) =>
+        unwrapRestResponse(raw) ?? {
+          list: [],
+          total: 0,
+          page: 1,
+          size: 20,
+          pages: 0,
+        },
       providesTags: (_result, _error, { id }) => [{ type: 'CompanyAnalysis', id: `LIST-${id}` }],
     }),
 
     // 单次分析详情
     getCompanyAnalysisById: build.query<CompanyAnalysisResult, { id: number; analysisId: string }>({
       query: ({ id, analysisId }) => ({ url: `companies/${id}/analyses/${analysisId}` }),
-      transformResponse: (raw: RestResponse<CompanyAnalysisResult> | CompanyAnalysisResult) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
-          return (raw as RestResponse<CompanyAnalysisResult>).data as CompanyAnalysisResult
-        }
-        return raw as CompanyAnalysisResult
-      },
+      transformResponse: (raw: RestResponse<CompanyAnalysisResult> | CompanyAnalysisResult) => unwrapRestResponse(raw),
       providesTags: (_result, _error, { analysisId }) => [{ type: 'CompanyAnalysis', id: analysisId }],
     }),
 

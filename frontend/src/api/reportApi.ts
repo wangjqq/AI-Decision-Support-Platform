@@ -111,7 +111,7 @@ export const reportApi = createApi({
         params: { page, size, keyword, companyId },
       }),
       transformResponse: (raw: RestResponse<ReportPageResponse> | ReportPageResponse) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (
             (raw as RestResponse<ReportPageResponse>).data ?? {
               list: [],
@@ -137,7 +137,7 @@ export const reportApi = createApi({
     getReportById: build.query<ReportDetail, string>({
       query: (id) => ({ url: `reports/${id}` }),
       transformResponse: (raw: RestResponse<ReportDetail> | ReportDetail) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (raw as RestResponse<ReportDetail>).data as ReportDetail
         }
         return raw as ReportDetail
@@ -153,7 +153,7 @@ export const reportApi = createApi({
         body,
       }),
       transformResponse: (raw: RestResponse<ReportDetail> | ReportDetail) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (raw as RestResponse<ReportDetail>).data as ReportDetail
         }
         return raw as ReportDetail

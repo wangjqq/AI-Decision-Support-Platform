@@ -12,6 +12,22 @@ export interface RestResponse<T = unknown> {
   timestamp?: number
 }
 
+/** 解包 RestResponse<T>；若已是业务对象则直接返回。
+ * 注意：不能仅通过 'code' 判断，因为业务对象（如 CompanyVO）本身可能有 code 字段（股票代码）。
+ */
+export const unwrapRestResponse = <T,>(raw: RestResponse<T> | T): T => {
+  if (
+    raw &&
+    typeof raw === 'object' &&
+    'code' in raw &&
+    'data' in raw &&
+    'msg' in raw
+  ) {
+    return (raw as RestResponse<T>).data as T
+  }
+  return raw as T
+}
+
 /** 业务异常：用于在拦截器抛出统一错误，由调用方决定如何处理 */
 export class ApiError extends Error {
   code: number
@@ -138,7 +154,7 @@ export const createRestResponseBaseQuery = (baseUrl: string) => {
       return result
     }
     const payload = result.data as RestResponse | undefined
-    if (payload && typeof payload === 'object' && 'code' in payload) {
+    if (payload && typeof payload === 'object' && 'code' in payload && 'data' in payload && 'msg' in payload) {
       if (payload.code === 0) {
         return { ...result, data: payload.data as unknown as Record<string, unknown> }
       }

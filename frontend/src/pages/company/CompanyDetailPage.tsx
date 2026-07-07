@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { Card, Button, Space, Result, App, Row, Col, Tag } from 'antd'
 import { ArrowLeftOutlined, BankOutlined } from '@ant-design/icons'
 import {
+  companyApi,
   useGetCompanyByIdQuery,
   useGetCompanyAnalysisHistoryQuery,
   useGetCompanyAnalysisByIdQuery,
@@ -31,7 +32,10 @@ const CompanyDetailPage = () => {
     data: company,
     isFetching: companyLoading,
     error: companyError,
-  } = useGetCompanyByIdQuery(companyId, { skip: !companyId || Number.isNaN(companyId) })
+  } = useGetCompanyByIdQuery(companyId, {
+    skip: !companyId || Number.isNaN(companyId),
+    refetchOnMountOrArgChange: true,
+  })
 
   const {
     data: historyResp,
@@ -41,6 +45,7 @@ const CompanyDetailPage = () => {
     { id: companyId, page: 1, size: 20 },
     {
       skip: !companyId || Number.isNaN(companyId),
+      refetchOnMountOrArgChange: true,
     },
   )
 
@@ -60,6 +65,13 @@ const CompanyDetailPage = () => {
   const displayedResult: CompanyAnalysisResult | null =
     currentAnalysis?.companyId === companyId ? currentAnalysis : ((pickedDetail as CompanyAnalysisResult) ?? null)
   const displayedAnalysisId = currentAnalysis?.companyId === companyId ? currentAnalysis.analysisId : pickedAnalysisId
+
+  // 进入页面时强制让当前公司的缓存失效，避免 RTK Query 返回旧的空数据
+  useEffect(() => {
+    if (companyId && !Number.isNaN(companyId)) {
+      dispatch(companyApi.util.invalidateTags([{ type: 'Company', id: companyId }]))
+    }
+  }, [companyId, dispatch])
 
   // 切换公司时清空
   useEffect(() => {

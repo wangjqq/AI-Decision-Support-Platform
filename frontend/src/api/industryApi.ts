@@ -143,7 +143,7 @@ export const industryApi = createApi({
         params: { page, size, keyword, level, parentId },
       }),
       transformResponse: (raw: RestResponse<IndustryPageResponse> | IndustryPageResponse) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (
             (raw as RestResponse<IndustryPageResponse>).data ?? {
               list: [],
@@ -169,7 +169,7 @@ export const industryApi = createApi({
     getIndustryById: build.query<IndustryVO, number>({
       query: (id) => ({ url: `industries/${id}` }),
       transformResponse: (raw: RestResponse<IndustryVO> | IndustryVO) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (raw as RestResponse<IndustryVO>).data as IndustryVO
         }
         return raw as IndustryVO
@@ -181,7 +181,7 @@ export const industryApi = createApi({
     createIndustry: build.mutation<IndustryVO, IndustryCreateRequest>({
       query: (body) => ({ url: 'industries', method: 'POST', body }),
       transformResponse: (raw: RestResponse<IndustryVO> | IndustryVO) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (raw as RestResponse<IndustryVO>).data as IndustryVO
         }
         return raw as IndustryVO
@@ -193,7 +193,7 @@ export const industryApi = createApi({
     updateIndustry: build.mutation<IndustryVO, { id: number; body: IndustryUpdateRequest }>({
       query: ({ id, body }) => ({ url: `industries/${id}`, method: 'PUT', body }),
       transformResponse: (raw: RestResponse<IndustryVO> | IndustryVO) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (raw as RestResponse<IndustryVO>).data as IndustryVO
         }
         return raw as IndustryVO
@@ -221,7 +221,7 @@ export const industryApi = createApi({
         body: body ?? {},
       }),
       transformResponse: (raw: RestResponse<IndustryAnalysisResult> | IndustryAnalysisResult) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (raw as RestResponse<IndustryAnalysisResult>).data as IndustryAnalysisResult
         }
         return raw as IndustryAnalysisResult
@@ -241,7 +241,7 @@ export const industryApi = createApi({
         params: { page, size },
       }),
       transformResponse: (raw: RestResponse<IndustryAnalysisHistoryResponse> | IndustryAnalysisHistoryResponse) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (
             (raw as RestResponse<IndustryAnalysisHistoryResponse>).data ?? {
               list: [],
@@ -263,7 +263,7 @@ export const industryApi = createApi({
     getIndustryAnalysisById: build.query<IndustryAnalysisResult, { id: number; analysisId: string }>({
       query: ({ id, analysisId }) => ({ url: `industries/${id}/analyses/${analysisId}` }),
       transformResponse: (raw: RestResponse<IndustryAnalysisResult> | IndustryAnalysisResult) => {
-        if (raw && typeof raw === 'object' && 'code' in raw) {
+        if (raw && typeof raw === 'object' && 'code' in raw && 'data' in raw && 'msg' in raw) {
           return (raw as RestResponse<IndustryAnalysisResult>).data as IndustryAnalysisResult
         }
         return raw as IndustryAnalysisResult
