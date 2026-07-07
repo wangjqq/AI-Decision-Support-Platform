@@ -6,7 +6,7 @@ import com.aidsp.platform.industry.api.IndustryAnalysisResultVO;
 import com.aidsp.platform.core.api.PageResponse;
 import com.aidsp.platform.core.exception.BusinessException;
 import com.aidsp.platform.core.exception.ErrorCode;
-import com.aidsp.platform.report.agent.ReportGenerationAgent;
+import com.aidsp.platform.report.agent.ReportAgent;
 import com.aidsp.platform.report.api.ReportGenerateRequest;
 import com.aidsp.platform.report.api.ReportHistoryItemVO;
 import com.aidsp.platform.report.api.ReportReferenceVO;
@@ -33,7 +33,7 @@ import java.util.List;
 /**
  * 报告业务服务实现。
  * <p>页面直驱：接收 {@link ReportGenerateRequest}（含公司 / 行业分析结果），
- * <br>调用 {@link ReportGenerationAgent} 生成 Markdown 报告，
+ * <br>调用 {@link ReportAgent} 生成 Markdown 报告（由 Spring 条件注入 Mock / LLM 实现），
  * <br>包装为 {@link ReportVO} 并落 {@link ReportRepository}。
  * <p>同时作为 Dubbo 服务（{@code @DubboService}）暴露 {@link ReportService#getById(String)}
  * <br>与 {@link ReportService#page(String, Long, Long, Long)}，供 Search / Dashboard 等模块调用。
@@ -49,7 +49,7 @@ public class ReportServiceImpl implements ReportService {
 
     private final ReportRepository reportRepository;
     private final ReportMapper reportMapper;
-    private final ReportGenerationAgent agent;
+    private final ReportAgent agent;
 
     // ===================== 报告生成 =====================
 
@@ -89,8 +89,8 @@ public class ReportServiceImpl implements ReportService {
                 request.getIndustryId(), request.getIndustryAnalysisId());
 
         // 调 Agent 生成
-        ReportGenerationAgent.ReportAgentResult raw = agent.generate(
-                new ReportGenerationAgent.ReportAgentRequest(
+        ReportAgent.ReportAgentResult raw = agent.generate(
+                new ReportAgent.ReportAgentRequest(
                         request.getTitle(),
                         request.getQuery(),
                         company,

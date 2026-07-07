@@ -1,2 +1,12 @@
+com\aidsp\platform\company\entity\Company.class
+com\aidsp\platform\company\service\CompanyAnalysisService.class
+com\aidsp\platform\company\service\CompanyMapper.class
 com\aidsp\platform\company\service\CompanyServiceImpl.class
 com\aidsp\platform\company\controller\CompanyController.class
+com\aidsp\platform\company\repository\CompanyRepository.class
+com\aidsp\platform\company\agent\LlmCompanyAnalysisAgent.class
+com\aidsp\platform\company\repository\CompanySeedData.class
+com\aidsp\platform\company\agent\CompanyAnalysisAgent.class
+com\aidsp\platform\company\entity\CompanyAnalysisResult.class
+com\aidsp\platform\company\entity\Company$CompanyBuilder.class
+com\aidsp\platform\company\repository\CompanyAnalysisRepository.class

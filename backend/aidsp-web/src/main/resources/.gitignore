@@ -1,0 +1,2 @@
+# 本地配置文件：含真实 API key，禁止提交到 git
+application-local.yml

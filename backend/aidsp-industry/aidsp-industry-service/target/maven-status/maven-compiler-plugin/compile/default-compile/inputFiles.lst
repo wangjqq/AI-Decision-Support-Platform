@@ -1,4 +1,5 @@
 D:\code\AI-Decision-Support-Platform\backend\aidsp-industry\aidsp-industry-service\src\main\java\com\aidsp\platform\industry\agent\IndustryAnalysisAgent.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-industry\aidsp-industry-service\src\main\java\com\aidsp\platform\industry\agent\LlmIndustryAnalysisAgent.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-industry\aidsp-industry-service\src\main\java\com\aidsp\platform\industry\controller\IndustryController.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-industry\aidsp-industry-service\src\main\java\com\aidsp\platform\industry\entity\Industry.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-industry\aidsp-industry-service\src\main\java\com\aidsp\platform\industry\entity\IndustryAnalysisResult.java

@@ -5,7 +5,7 @@ import com.aidsp.platform.analysis.api.AnalysisQueryRequest;
 import com.aidsp.platform.analysis.api.AnalysisResultDTO;
 import com.aidsp.platform.analysis.api.AnalysisType;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Primary;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -16,10 +16,11 @@ import java.util.concurrent.ThreadLocalRandom;
 /**
  * 通用 Mock 分析 Agent。
  * <p>supports() 返回 null，标识兜底支持所有类型；模拟耗时 800~1500ms 后返回样例结果。
+ * <p>激活条件：{@code aidsp.agent.mock-only=true}。
  */
 @Slf4j
 @Service
-@Primary
+@ConditionalOnProperty(name = "aidsp.agent.mock-only", havingValue = "true")
 public class MockAnalysisAgent implements AnalysisAgent {
 
     @Override

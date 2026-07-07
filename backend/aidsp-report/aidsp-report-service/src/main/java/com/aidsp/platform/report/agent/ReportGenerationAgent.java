@@ -12,6 +12,7 @@ import com.aidsp.platform.report.api.ReportReferenceVO;
 import com.aidsp.platform.report.api.ReportSectionVO;
 import com.aidsp.platform.report.api.ReportTocItemVO;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -23,13 +24,13 @@ import java.util.concurrent.ThreadLocalRandom;
  * 报告生成 Agent（Mock 实现）。
  * <p>实现 {@link AnalysisAgent} 接口，{@code supports() = REPORT}，
  * <br>由 {@code OrchestratorDispatcher} 扫描注册。
- * <p><b>输入：</b>通过 {@link ReportAgentRequest} 传入公司 / 行业分析结果。
- * <br><b>输出：</b>{@link ReportAgentResult}：包含完整 Markdown 文本、目录、章节、参考。
- * <p>当前阶段用模板拼接实现，不依赖外部 LLM；后续可替换为 Spring AI 调用。
+ * <p>同时实现 {@link ReportAgent} 接口，供 {@code ReportServiceImpl} 直接调用生成报告。
+ * <p>当前阶段用模板拼接实现，不依赖外部 LLM；通过 {@code aidsp.agent.mock-only=true} 激活。
  */
 @Slf4j
 @Service
-public class ReportGenerationAgent implements AnalysisAgent {
+@ConditionalOnProperty(name = "aidsp.agent.mock-only", havingValue = "true")
+public class ReportGenerationAgent implements AnalysisAgent, ReportAgent {
 
     @Override
     public AnalysisType supports() {
@@ -52,6 +53,7 @@ public class ReportGenerationAgent implements AnalysisAgent {
      * @param req 报告输入（公司 + 行业分析结果 + 用户 query）
      * @return 报告输出（Markdown + 目录 + 章节 + 参考）
      */
+    @Override
     public ReportAgentResult generate(ReportAgentRequest req) {
         long start = System.currentTimeMillis();
         // 模拟思考耗时 1500-2500ms
@@ -440,30 +442,5 @@ public class ReportGenerationAgent implements AnalysisAgent {
     }
 
     // ===================== 入参 / 出参 =====================
-
-    /**
-     * ReportGenerationAgent 输入。
-     */
-    public record ReportAgentRequest(
-            String title,
-            String query,
-            CompanyAnalysisResultVO company,
-            IndustryAnalysisResultVO industry
-    ) {
-    }
-
-    /**
-     * ReportGenerationAgent 输出。
-     */
-    public record ReportAgentResult(
-            String title,
-            String summary,
-            String summaryMarkdown,
-            List<ReportTocItemVO> toc,
-            List<ReportSectionVO> sections,
-            String markdown,
-            List<ReportReferenceVO> references,
-            long tookMs
-    ) {
-    }
+    // 内联 record 已被抽到 ReportAgent 接口，ReportServiceImpl 统一通过接口使用。
 }

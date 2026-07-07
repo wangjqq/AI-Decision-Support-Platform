@@ -6,6 +6,7 @@ import com.aidsp.platform.analysis.api.AnalysisResultDTO;
 import com.aidsp.platform.analysis.api.AnalysisType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedHashMap;
@@ -20,10 +21,12 @@ import java.util.concurrent.ThreadLocalRandom;
  * <p>输入：用户的自然语言 query（如"分析光伏行业"），会从 query 文本中尽量匹配"光伏"/"新能源"等关键词作为模拟行业。
  * <p>输出：标准的 {@link AnalysisResultDTO}，<code>result</code> 字段是 6 维度结构
  * （overview / marketSize / chain / leading / trends / risks）+ chainNodes + leadingCompanies + references。
+ * <p>激活条件：{@code aidsp.agent.mock-only=true}；为 false（默认）时由 {@link LlmIndustryAnalysisAgent} 接管。
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@ConditionalOnProperty(name = "aidsp.agent.mock-only", havingValue = "true")
 public class IndustryAnalysisAgent implements AnalysisAgent {
 
     @Override

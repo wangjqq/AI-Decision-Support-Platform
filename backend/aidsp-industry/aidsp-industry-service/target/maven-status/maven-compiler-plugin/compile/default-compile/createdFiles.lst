@@ -10,4 +10,5 @@ com\aidsp\platform\industry\entity\Industry$IndustryBuilder.class
 com\aidsp\platform\industry\repository\IndustrySeedData.class
 com\aidsp\platform\industry\agent\IndustryAnalysisAgent.class
 com\aidsp\platform\industry\agent\IndustryAnalysisAgent$IndustryTemplate.class
+com\aidsp\platform\industry\agent\LlmIndustryAnalysisAgent.class
 com\aidsp\platform\industry\entity\IndustryAnalysisResult.class
