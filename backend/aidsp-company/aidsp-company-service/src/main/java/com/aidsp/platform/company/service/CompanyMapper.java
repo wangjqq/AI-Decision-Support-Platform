@@ -1,12 +1,13 @@
 package com.aidsp.platform.company.service;
 
+import com.aidsp.platform.company.api.CompanyAnalysisResultVO;
+import com.aidsp.platform.company.api.CompanyDimensionVO;
+import com.aidsp.platform.company.api.CompanyFinancialVO;
 import com.aidsp.platform.company.api.CompanyVO;
 import com.aidsp.platform.company.entity.Company;
-import com.aidsp.platform.company.api.CompanyDimensionVO;
-import com.aidsp.platform.company.api.CompanyAnalysisResultVO;
 import com.aidsp.platform.company.entity.CompanyAnalysisResult;
-import com.aidsp.platform.company.repository.CompanyRepository;
 import com.aidsp.platform.company.repository.CompanyAnalysisRepository;
+import com.aidsp.platform.company.repository.CompanyRepository;
 import org.springframework.stereotype.Component;
 
 /**
@@ -32,16 +33,32 @@ public class CompanyMapper {
         CompanyVO v = new CompanyVO();
         v.setId(c.getId());
         v.setName(c.getName());
+        v.setCode(c.getCode());
         v.setUscc(c.getUscc());
         v.setIndustryId(c.getIndustryId());
         v.setIndustryName(c.getIndustryName());
+        v.setIndustry(c.getIndustry());
         v.setMainBusiness(c.getMainBusiness());
+        v.setBusiness(c.getBusiness());
         v.setAddress(c.getAddress());
         v.setEstablishedAt(c.getEstablishedAt());
         v.setDescription(c.getDescription());
+        v.setFinancial(toFinancialVO(c.getFinancial()));
         v.setCreatedAt(c.getCreatedAt());
         v.setUpdatedAt(c.getUpdatedAt());
         return v;
+    }
+
+    private CompanyFinancialVO toFinancialVO(CompanyFinancialVO f) {
+        // CompanyFinancialVO 当前是共享结构（Entity 直接持有 VO），此处做浅拷贝避免副作用
+        if (f == null) {
+            return null;
+        }
+        return CompanyFinancialVO.builder()
+                .revenue(f.getRevenue())
+                .profit(f.getProfit())
+                .period(f.getPeriod())
+                .build();
     }
 
     public CompanyAnalysisResultVO toAnalysisVO(CompanyAnalysisResult r) {

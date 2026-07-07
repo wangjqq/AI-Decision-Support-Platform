@@ -1,6 +1,7 @@
 package com.aidsp.platform.company.service;
 
 import com.aidsp.platform.company.api.CompanyCreateRequest;
+import com.aidsp.platform.company.api.CompanyFinancialVO;
 import com.aidsp.platform.company.api.CompanyUpdateRequest;
 import com.aidsp.platform.company.api.CompanyVO;
 import com.aidsp.platform.company.entity.Company;
@@ -55,13 +56,17 @@ public class CompanyServiceImpl implements com.aidsp.platform.company.api.Compan
         LocalDateTime now = LocalDateTime.now();
         Company c = Company.builder()
                 .name(request.getName())
+                .code(request.getCode())
                 .uscc(request.getUscc())
                 .industryId(request.getIndustryId())
                 .industryName(industryNameOf(request.getIndustryId()))
+                .industry(request.getIndustry())
                 .mainBusiness(request.getMainBusiness())
+                .business(request.getBusiness())
                 .address(request.getAddress())
                 .establishedAt(request.getEstablishedAt())
                 .description(request.getDescription())
+                .financial(copyFinancial(request.getFinancial()))
                 .createdAt(now)
                 .updatedAt(now)
                 .build();
@@ -76,13 +81,17 @@ public class CompanyServiceImpl implements com.aidsp.platform.company.api.Compan
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
         validateUnique(request.getName(), request.getUscc(), id);
         existing.setName(request.getName());
+        existing.setCode(request.getCode());
         existing.setUscc(request.getUscc());
         existing.setIndustryId(request.getIndustryId());
         existing.setIndustryName(industryNameOf(request.getIndustryId()));
+        existing.setIndustry(request.getIndustry());
         existing.setMainBusiness(request.getMainBusiness());
+        existing.setBusiness(request.getBusiness());
         existing.setAddress(request.getAddress());
         existing.setEstablishedAt(request.getEstablishedAt());
         existing.setDescription(request.getDescription());
+        existing.setFinancial(copyFinancial(request.getFinancial()));
         existing.setUpdatedAt(LocalDateTime.now());
         Company updated = companyRepository.update(existing)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
@@ -120,5 +129,16 @@ public class CompanyServiceImpl implements com.aidsp.platform.company.api.Compan
             case 5 -> "医疗器械";
             default -> "其他";
         };
+    }
+
+    private CompanyFinancialVO copyFinancial(CompanyFinancialVO src) {
+        if (src == null) {
+            return null;
+        }
+        return CompanyFinancialVO.builder()
+                .revenue(src.getRevenue())
+                .profit(src.getProfit())
+                .period(src.getPeriod())
+                .build();
     }
 }

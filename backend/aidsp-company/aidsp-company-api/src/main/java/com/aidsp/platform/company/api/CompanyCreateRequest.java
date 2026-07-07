@@ -8,6 +8,7 @@ import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 
 /**
  * 创建公司请求。
@@ -21,6 +22,9 @@ public class CompanyCreateRequest implements Serializable {
     @Size(max = 100)
     private String name;
 
+    @Size(max = 16)
+    private String code;
+
     @NotBlank
     @Pattern(regexp = "^\\d{18}$", message = "统一社会信用代码必须为 18 位数字")
     private String uscc;
@@ -28,9 +32,14 @@ public class CompanyCreateRequest implements Serializable {
     @NotNull
     private Long industryId;
 
+    @Size(max = 64)
+    private String industry;
+
     @NotBlank
     @Size(max = 500)
     private String mainBusiness;
+
+    private List<String> business;
 
     @Size(max = 200)
     private String address;
@@ -39,4 +48,6 @@ public class CompanyCreateRequest implements Serializable {
 
     @Size(max = 2000)
     private String description;
+
+    private CompanyFinancialVO financial;
 }

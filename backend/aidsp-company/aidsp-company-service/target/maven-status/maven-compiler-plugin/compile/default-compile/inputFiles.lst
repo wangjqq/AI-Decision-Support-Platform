@@ -4,6 +4,7 @@ D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service
 D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\entity\Company.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\entity\CompanyAnalysisResult.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\repository\CompanyAnalysisRepository.java
+D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\repository\CompanyDataProvider.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\repository\CompanyRepository.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\repository\CompanySeedData.java
 D:\code\AI-Decision-Support-Platform\backend\aidsp-company\aidsp-company-service\src\main\java\com\aidsp\platform\company\service\CompanyAnalysisService.java

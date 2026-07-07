@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Card, Table, Input, Space, Button, Popconfirm, type TableProps, App } from 'antd'
+import { Card, Table, Input, Space, Button, Popconfirm, Tag, Typography, type TableProps, App } from 'antd'
 import {
   SearchOutlined,
   EyeOutlined,
@@ -20,6 +20,7 @@ const CompanyListPage = () => {
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
   const { message } = App.useApp()
+  const { Text } = Typography
 
   const [page, setPage] = useState(1)
   const [size, setSize] = useState(20)
@@ -42,14 +43,42 @@ const CompanyListPage = () => {
   }
 
   const columns: TableProps<CompanyVO>['columns'] = [
-    { title: 'ID', dataIndex: 'id', key: 'id', width: 80 },
+    { title: 'ID', dataIndex: 'id', key: 'id', width: 70 },
+    {
+      title: '股票代码',
+      dataIndex: 'code',
+      key: 'code',
+      width: 100,
+      render: (v: string | undefined) =>
+        v ? <Tag color="geekblue">{v}</Tag> : <Text type="secondary">-</Text>,
+    },
     { title: '公司名称', dataIndex: 'name', key: 'name', ellipsis: true },
+    {
+      title: '细分行业',
+      dataIndex: 'industry',
+      key: 'industry',
+      width: 120,
+      render: (v: string | undefined) => v ?? '-',
+    },
     {
       title: '所属行业',
       dataIndex: 'industryName',
       key: 'industryName',
-      width: 120,
+      width: 110,
       render: (v: string | undefined) => v ?? '-',
+    },
+    {
+      title: '主营营收',
+      dataIndex: ['financial', 'revenue'],
+      key: 'revenue',
+      width: 130,
+      render: (_v, record) => {
+        const r = record.financial?.revenue
+        if (r == null) return '-'
+        if (r >= 100_000_000) return `${(r / 100_000_000).toFixed(2)} 亿`
+        if (r >= 10_000) return `${(r / 10_000).toFixed(2)} 万`
+        return String(r)
+      },
     },
     { title: '主营业务', dataIndex: 'mainBusiness', key: 'mainBusiness', ellipsis: true },
     {
@@ -125,7 +154,7 @@ const CompanyListPage = () => {
         loading={isFetching}
         columns={columns}
         dataSource={list}
-        scroll={{ x: 1000 }}
+        scroll={{ x: 1300 }}
         pagination={{
           current: page,
           pageSize: size,

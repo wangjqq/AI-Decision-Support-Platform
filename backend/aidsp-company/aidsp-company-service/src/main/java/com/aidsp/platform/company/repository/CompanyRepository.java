@@ -143,4 +143,29 @@ public class CompanyRepository {
         store.putIfAbsent(company.getId(), company);
         log.info("[CompanyRepository] seed company id={}, name={}", company.getId(), company.getName());
     }
+
+    /**
+     * 批量覆盖写入（供 DataProvider 注入真实企业数据）。
+     * <p>同步将自增 id 游标推至当前最大 id，避免后续新增 id 冲突。
+     */
+    public void putAll(java.util.Collection<Company> companies) {
+        if (companies == null || companies.isEmpty()) {
+            return;
+        }
+        for (Company c : companies) {
+            if (c.getId() == null) {
+                c.setId(nextId());
+            }
+            store.put(c.getId(), c);
+        }
+        // 推动 idGen 至当前最大 id
+        long maxId = companies.stream()
+                .map(Company::getId)
+                .filter(java.util.Objects::nonNull)
+                .mapToLong(Long::longValue)
+                .max()
+                .orElse(0L);
+        idGen.updateAndGet(prev -> Math.max(prev, maxId));
+        log.info("[CompanyRepository] putAll {} companies, idGen={}", companies.size(), idGen.get());
+    }
 }

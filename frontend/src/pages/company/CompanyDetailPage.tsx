@@ -130,7 +130,9 @@ const CompanyDetailPage = () => {
           </Button>
           <BankOutlined style={{ fontSize: 22, color: '#6366f1' }} />
           <span style={{ fontSize: 18, fontWeight: 600, color: '#0f172a' }}>{company?.name ?? '加载中...'}</span>
+          {company?.code && <Tag color="geekblue">{company.code}</Tag>}
           {company?.industryName && <Tag color="blue">{company.industryName}</Tag>}
+          {company?.industry && <Tag color="cyan">{company.industry}</Tag>}
         </Space>
       </Card>
 

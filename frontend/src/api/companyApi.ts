@@ -9,17 +9,31 @@ export interface CompanyPageParams {
   industryId?: number
 }
 
+/** 公司财务核心指标（详情中嵌套在 financial 字段下） */
+export interface CompanyFinancial {
+  revenue?: number
+  profit?: number
+  period?: string
+}
+
 /** 公司 VO（与后端 CompanyVO 对齐） */
 export interface CompanyVO {
   id: number
   name: string
+  /** 股票代码（如 002837） */
+  code?: string
   uscc: string
   industryId?: number
   industryName?: string
+  /** 细分行业（如 "液冷设备"） */
+  industry?: string
   mainBusiness: string
+  /** 业务板块列表 */
+  business?: string[]
   address?: string
   establishedAt?: string
   description?: string
+  financial?: CompanyFinancial
   createdAt?: string
   updatedAt?: string
 }
@@ -36,23 +50,31 @@ export interface CompanyPageResponse {
 /** 创建公司请求 */
 export interface CompanyCreateRequest {
   name: string
+  code?: string
   uscc: string
   industryId: number
+  industry?: string
   mainBusiness: string
+  business?: string[]
   address?: string
   establishedAt?: string
   description?: string
+  financial?: CompanyFinancial
 }
 
 /** 更新公司请求 */
 export interface CompanyUpdateRequest {
   name: string
+  code?: string
   uscc: string
   industryId: number
+  industry?: string
   mainBusiness: string
+  business?: string[]
   address?: string
   establishedAt?: string
   description?: string
+  financial?: CompanyFinancial
 }
 
 /** 公司分析请求 */
