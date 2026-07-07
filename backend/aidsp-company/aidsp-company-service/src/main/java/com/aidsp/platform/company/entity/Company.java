@@ -88,7 +88,8 @@ public class Company implements Serializable {
 
     /** 软删除标记：0-启用 1-禁用。 */
     @TableLogic
-    private Integer status;
+    @Builder.Default
+    private Integer status = 0;
 
     @TableField(value = "created_at", fill = FieldFill.INSERT)
     private LocalDateTime createdAt;

@@ -69,7 +69,7 @@ CREATE TABLE IF NOT EXISTS `company` (
   `revenue`          DECIMAL(20,2)  DEFAULT NULL            COMMENT '营收 (元)',
   `profit`           DECIMAL(20,2)  DEFAULT NULL            COMMENT '净利润 (元)',
   `financial_period` VARCHAR(16)    DEFAULT NULL            COMMENT '财报周期 (如 2024 / 2025Q1)',
-  `status`           TINYINT        NOT NULL DEFAULT 1      COMMENT '0-禁用 1-启用 (软删除)',
+  `status`           TINYINT        NOT NULL DEFAULT 0      COMMENT '0-启用 1-禁用 (软删除, 与 MyBatis-Plus @TableLogic 一致)',
   `created_at`       DATETIME       NOT NULL                COMMENT '创建时间',
   `updated_at`       DATETIME       NOT NULL                COMMENT '更新时间',
   PRIMARY KEY (`id`),
