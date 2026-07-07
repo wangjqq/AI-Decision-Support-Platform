@@ -60,7 +60,13 @@ const CompanyBasicCard = ({ company, loading }: CompanyBasicCardProps) => {
             title="营收"
             value={formatAmount(company.financial.revenue)}
             valueStyle={{ fontSize: 20, color: '#1677ff' }}
-            suffix={company.financial.period ? <Text type="secondary" style={{ fontSize: 12 }}>（{company.financial.period}）</Text> : null}
+            suffix={
+              company.financial.period ? (
+                <Text type="secondary" style={{ fontSize: 12 }}>
+                  （{company.financial.period}）
+                </Text>
+              ) : null
+            }
           />
           <Statistic
             title="净利润"
@@ -76,15 +82,9 @@ const CompanyBasicCard = ({ company, loading }: CompanyBasicCardProps) => {
       <Descriptions column={1} size="small" bordered>
         <Descriptions.Item label="ID">{company.id}</Descriptions.Item>
         <Descriptions.Item label="股票代码">{company.code || '-'}</Descriptions.Item>
-        <Descriptions.Item label="统一社会信用代码">
-          {company.uscc || '-'}
-        </Descriptions.Item>
-        <Descriptions.Item label="所属行业">
-          {company.industryName || '-'}
-        </Descriptions.Item>
-        <Descriptions.Item label="细分行业">
-          {company.industry || '-'}
-        </Descriptions.Item>
+        <Descriptions.Item label="统一社会信用代码">{company.uscc || '-'}</Descriptions.Item>
+        <Descriptions.Item label="所属行业">{company.industryName || '-'}</Descriptions.Item>
+        <Descriptions.Item label="细分行业">{company.industry || '-'}</Descriptions.Item>
         <Descriptions.Item label="主营业务">{company.mainBusiness || '-'}</Descriptions.Item>
         <Descriptions.Item label="业务板块">
           {company.business && company.business.length > 0 ? (
@@ -99,16 +99,10 @@ const CompanyBasicCard = ({ company, loading }: CompanyBasicCardProps) => {
             '-'
           )}
         </Descriptions.Item>
-        <Descriptions.Item label="成立日期">
-          {formatDate(company.establishedAt)}
-        </Descriptions.Item>
+        <Descriptions.Item label="成立日期">{formatDate(company.establishedAt)}</Descriptions.Item>
         <Descriptions.Item label="注册地址">{company.address || '-'}</Descriptions.Item>
-        <Descriptions.Item label="公司简介">
-          {company.description || '-'}
-        </Descriptions.Item>
-        <Descriptions.Item label="更新时间">
-          {company.updatedAt || '-'}
-        </Descriptions.Item>
+        <Descriptions.Item label="公司简介">{company.description || '-'}</Descriptions.Item>
+        <Descriptions.Item label="更新时间">{company.updatedAt || '-'}</Descriptions.Item>
       </Descriptions>
     </Card>
   )

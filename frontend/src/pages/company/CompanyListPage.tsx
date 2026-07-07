@@ -49,8 +49,7 @@ const CompanyListPage = () => {
       dataIndex: 'code',
       key: 'code',
       width: 100,
-      render: (v: string | undefined) =>
-        v ? <Tag color="geekblue">{v}</Tag> : <Text type="secondary">-</Text>,
+      render: (v: string | undefined) => (v ? <Tag color="geekblue">{v}</Tag> : <Text type="secondary">-</Text>),
     },
     { title: '公司名称', dataIndex: 'name', key: 'name', ellipsis: true },
     {

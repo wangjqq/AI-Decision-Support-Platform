@@ -11,6 +11,11 @@ USE aidsp;
 SET NAMES utf8mb4;
 
 -- =====================================================================
+-- §0 清理脚本自身不再创建的残留索引 (兼容老版本 schema)
+-- =====================================================================
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='company' AND index_name='idx_industry')>0, 'ALTER TABLE `company` DROP INDEX `idx_industry`', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+
+-- =====================================================================
 -- §2.1 user 用户表
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `user` (
@@ -49,24 +54,28 @@ CREATE TABLE IF NOT EXISTS `industry` (
 -- §2.3 company 公司表
 -- =====================================================================
 CREATE TABLE IF NOT EXISTS `company` (
-  `id`                  BIGINT         NOT NULL AUTO_INCREMENT COMMENT '主键',
-  `name`                VARCHAR(128)   NOT NULL                COMMENT '公司名称',
-  `uscc`                VARCHAR(18)    DEFAULT NULL            COMMENT '统一社会信用代码',
-  `stock_code`          VARCHAR(16)    DEFAULT NULL            COMMENT '股票代码 (仅作标识)',
-  `industry_id`         BIGINT         NOT NULL                COMMENT '所属行业 industry.id',
-  `main_business`       TEXT           DEFAULT NULL            COMMENT '主营业务',
-  `founded_at`          DATE           DEFAULT NULL            COMMENT '成立日期',
-  `registered_capital` DECIMAL(20,2)   DEFAULT NULL            COMMENT '注册资本',
-  `province`            VARCHAR(32)    DEFAULT NULL            COMMENT '省份',
-  `city`                VARCHAR(32)    DEFAULT NULL            COMMENT '城市',
-  `summary`             TEXT           DEFAULT NULL            COMMENT 'AI 生成的简介',
-  `logo_url`            VARCHAR(255)   DEFAULT NULL            COMMENT 'Logo URL',
-  `status`              TINYINT        NOT NULL DEFAULT 1      COMMENT '0-禁用 1-启用',
-  `created_at`          DATETIME       NOT NULL                COMMENT '创建时间',
-  `updated_at`          DATETIME       NOT NULL                COMMENT '更新时间',
+  `id`               BIGINT         NOT NULL AUTO_INCREMENT COMMENT '主键',
+  `name`             VARCHAR(128)   NOT NULL                COMMENT '公司名称',
+  `code`             VARCHAR(16)    DEFAULT NULL            COMMENT '股票代码',
+  `uscc`             VARCHAR(18)    DEFAULT NULL            COMMENT '统一社会信用代码',
+  `industry_id`      BIGINT         NOT NULL                COMMENT '所属行业 industry.id',
+  `industry_name`    VARCHAR(64)    DEFAULT NULL            COMMENT '行业名称 (冗余自 industry)',
+  `industry`         VARCHAR(64)    DEFAULT NULL            COMMENT '细分行业 (如 液冷设备)',
+  `main_business`    TEXT           DEFAULT NULL            COMMENT '主营业务',
+  `business`         JSON           DEFAULT NULL            COMMENT '业务板块 (List<String> JSON 序列化)',
+  `address`          VARCHAR(255)   DEFAULT NULL            COMMENT '注册地址',
+  `founded_at`       DATE           DEFAULT NULL            COMMENT '成立日期',
+  `description`      TEXT           DEFAULT NULL            COMMENT '公司简介',
+  `revenue`          DECIMAL(20,2)  DEFAULT NULL            COMMENT '营收 (元)',
+  `profit`           DECIMAL(20,2)  DEFAULT NULL            COMMENT '净利润 (元)',
+  `financial_period` VARCHAR(16)    DEFAULT NULL            COMMENT '财报周期 (如 2024 / 2025Q1)',
+  `status`           TINYINT        NOT NULL DEFAULT 1      COMMENT '0-禁用 1-启用 (软删除)',
+  `created_at`       DATETIME       NOT NULL                COMMENT '创建时间',
+  `updated_at`       DATETIME       NOT NULL                COMMENT '更新时间',
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uk_uscc`       (`uscc`),
-  UNIQUE KEY `uk_stock_code` (`stock_code`)
+  UNIQUE KEY `uk_uscc`         (`uscc`),
+  UNIQUE KEY `uk_code`         (`code`),
+  KEY        `idx_industry_id` (`industry_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='公司表';
 
 -- =====================================================================
@@ -212,44 +221,44 @@ CREATE TABLE IF NOT EXISTS `source` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT='数据来源';
 
 -- =====================================================================
--- §3.2 重点索引 (NORMAL / UNIQUE)
+-- §3.2 重点索引 (NORMAL / UNIQUE) — 全部使用 prepared statement 包装为幂等
+--       重复执行脚本时已存在的索引会被自动跳过
 -- =====================================================================
 
 -- company
-ALTER TABLE `company`           ADD INDEX `idx_industry`        (`industry_id`);
-ALTER TABLE `company`           ADD INDEX `idx_name`            (`name`);
-ALTER TABLE `company`           ADD INDEX `idx_updated`         (`updated_at` DESC);
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='company' AND index_name='idx_name')=0, 'ALTER TABLE `company` ADD INDEX `idx_name` (`name`)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='company' AND index_name='idx_updated')=0, 'ALTER TABLE `company` ADD INDEX `idx_updated` (`updated_at` DESC)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- company_financial
-ALTER TABLE `company_financial` ADD UNIQUE INDEX `uk_company_period` (`company_id`, `period`);
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='company_financial' AND index_name='uk_company_period')=0, 'ALTER TABLE `company_financial` ADD UNIQUE INDEX `uk_company_period` (`company_id`, `period`)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- report
-ALTER TABLE `report`            ADD INDEX `idx_target`          (`target_type`, `target_id`);
-ALTER TABLE `report`            ADD INDEX `idx_status_created`  (`status`, `created_at` DESC);
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='report' AND index_name='idx_target')=0, 'ALTER TABLE `report` ADD INDEX `idx_target` (`target_type`, `target_id`)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='report' AND index_name='idx_status_created')=0, 'ALTER TABLE `report` ADD INDEX `idx_status_created` (`status`, `created_at` DESC)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- report_section
-ALTER TABLE `report_section`    ADD UNIQUE INDEX `uk_report_seq`     (`report_id`, `seq`);
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='report_section' AND index_name='uk_report_seq')=0, 'ALTER TABLE `report_section` ADD UNIQUE INDEX `uk_report_seq` (`report_id`, `seq`)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- knowledge
-ALTER TABLE `knowledge`         ADD UNIQUE INDEX `uk_content_hash`   (`content_hash`);
-ALTER TABLE `knowledge`         ADD INDEX `idx_published`        (`published_at` DESC);
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='knowledge' AND index_name='uk_content_hash')=0, 'ALTER TABLE `knowledge` ADD UNIQUE INDEX `uk_content_hash` (`content_hash`)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='knowledge' AND index_name='idx_published')=0, 'ALTER TABLE `knowledge` ADD INDEX `idx_published` (`published_at` DESC)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- knowledge_chunk
-ALTER TABLE `knowledge_chunk`   ADD UNIQUE INDEX `uk_knowledge_seq`  (`knowledge_id`, `seq`);
-ALTER TABLE `knowledge_chunk`   ADD INDEX `idx_knowledge`        (`knowledge_id`);
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='knowledge_chunk' AND index_name='uk_knowledge_seq')=0, 'ALTER TABLE `knowledge_chunk` ADD UNIQUE INDEX `uk_knowledge_seq` (`knowledge_id`, `seq`)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='knowledge_chunk' AND index_name='idx_knowledge')=0, 'ALTER TABLE `knowledge_chunk` ADD INDEX `idx_knowledge` (`knowledge_id`)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- agent_run
-ALTER TABLE `agent_run`         ADD UNIQUE INDEX `idx_task`           (`task_id`);
-ALTER TABLE `agent_run`         ADD INDEX `idx_agent_started`     (`agent_name`, `started_at` DESC);
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='agent_run' AND index_name='idx_task')=0, 'ALTER TABLE `agent_run` ADD UNIQUE INDEX `idx_task` (`task_id`)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='agent_run' AND index_name='idx_agent_started')=0, 'ALTER TABLE `agent_run` ADD INDEX `idx_agent_started` (`agent_name`, `started_at` DESC)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- industry
-ALTER TABLE `industry`          ADD UNIQUE INDEX `uk_code`           (`code`);
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='industry' AND index_name='uk_code')=0, 'ALTER TABLE `industry` ADD UNIQUE INDEX `uk_code` (`code`)', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- =====================================================================
--- §3.3 全文索引 (中文 ngram 解析器)
+-- §3.3 全文索引 (中文 ngram 解析器) — 幂等
 -- =====================================================================
-ALTER TABLE `report_section`    ADD FULLTEXT INDEX `ft_content`       (`content_md`) WITH PARSER ngram;
-ALTER TABLE `knowledge_chunk`   ADD FULLTEXT INDEX `ft_content`       (`content`)    WITH PARSER ngram;
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='report_section' AND index_name='ft_content')=0, 'ALTER TABLE `report_section` ADD FULLTEXT INDEX `ft_content` (`content_md`) WITH PARSER ngram', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
+SET @sql := IF((SELECT COUNT(*) FROM information_schema.statistics WHERE table_schema=DATABASE() AND table_name='knowledge_chunk' AND index_name='ft_content')=0, 'ALTER TABLE `knowledge_chunk` ADD FULLTEXT INDEX `ft_content` (`content`) WITH PARSER ngram', 'DO 0'); PREPARE s FROM @sql; EXECUTE s; DEALLOCATE PREPARE s;
 
 -- =====================================================================
 -- 初始数据: 测试 admin 用户

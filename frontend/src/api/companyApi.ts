@@ -156,7 +156,7 @@ export const companyApi = createApi({
       providesTags: (result) =>
         result
           ? [
-              ...(result.list.map((c) => ({ type: 'Company' as const, id: c.id }))),
+              ...result.list.map((c) => ({ type: 'Company' as const, id: c.id })),
               { type: 'Company' as const, id: 'LIST' },
             ]
           : [{ type: 'Company' as const, id: 'LIST' }],
@@ -223,9 +223,7 @@ export const companyApi = createApi({
         }
         return raw as CompanyAnalysisResult
       },
-      invalidatesTags: (_result, _error, { id }) => [
-        { type: 'CompanyAnalysis', id: `LIST-${id}` },
-      ],
+      invalidatesTags: (_result, _error, { id }) => [{ type: 'CompanyAnalysis', id: `LIST-${id}` }],
     }),
 
     // 某公司分析历史
@@ -251,9 +249,7 @@ export const companyApi = createApi({
         }
         return raw as CompanyAnalysisHistoryResponse
       },
-      providesTags: (_result, _error, { id }) => [
-        { type: 'CompanyAnalysis', id: `LIST-${id}` },
-      ],
+      providesTags: (_result, _error, { id }) => [{ type: 'CompanyAnalysis', id: `LIST-${id}` }],
     }),
 
     // 单次分析详情
@@ -265,9 +261,7 @@ export const companyApi = createApi({
         }
         return raw as CompanyAnalysisResult
       },
-      providesTags: (_result, _error, { analysisId }) => [
-        { type: 'CompanyAnalysis', id: analysisId },
-      ],
+      providesTags: (_result, _error, { analysisId }) => [{ type: 'CompanyAnalysis', id: analysisId }],
     }),
 
     // 删除单次分析

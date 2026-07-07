@@ -7,22 +7,22 @@ import com.aidsp.platform.company.api.CompanyVO;
 import com.aidsp.platform.company.entity.Company;
 import com.aidsp.platform.company.entity.CompanyAnalysisResult;
 import com.aidsp.platform.company.repository.CompanyAnalysisRepository;
-import com.aidsp.platform.company.repository.CompanyRepository;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
- * Entity ↔ VO 手动映射工具。
- * <p>MVP 阶段不引入 MapStruct，避免额外依赖。
+ * Entity ↔ VO 手动映射器（DTO Converter）。
+ * <p>避免与 {@code repository.CompanyMapper}（MyBatis-Plus 接口）同名冲突，故命名为 {@code CompanyVoConverter}。
+ * <p>DB 中 {@code revenue / profit / financial_period} 是扁平列，组装为 {@link CompanyFinancialVO} 返回。
  */
 @Component
-public class CompanyMapper {
+public class CompanyVoConverter {
 
-    private final CompanyRepository companyRepository;
+    @SuppressWarnings("unused")
     private final CompanyAnalysisRepository analysisRepository;
 
-    public CompanyMapper(CompanyRepository companyRepository,
-                         CompanyAnalysisRepository analysisRepository) {
-        this.companyRepository = companyRepository;
+    public CompanyVoConverter(CompanyAnalysisRepository analysisRepository) {
         this.analysisRepository = analysisRepository;
     }
 
@@ -43,21 +43,21 @@ public class CompanyMapper {
         v.setAddress(c.getAddress());
         v.setEstablishedAt(c.getEstablishedAt());
         v.setDescription(c.getDescription());
-        v.setFinancial(toFinancialVO(c.getFinancial()));
+        v.setFinancial(toFinancialVO(c));
         v.setCreatedAt(c.getCreatedAt());
         v.setUpdatedAt(c.getUpdatedAt());
         return v;
     }
 
-    private CompanyFinancialVO toFinancialVO(CompanyFinancialVO f) {
-        // CompanyFinancialVO 当前是共享结构（Entity 直接持有 VO），此处做浅拷贝避免副作用
-        if (f == null) {
+    /** 从扁平字段构造嵌套财务 VO。 */
+    private CompanyFinancialVO toFinancialVO(Company c) {
+        if (c.getRevenue() == null && c.getProfit() == null && c.getFinancialPeriod() == null) {
             return null;
         }
         return CompanyFinancialVO.builder()
-                .revenue(f.getRevenue())
-                .profit(f.getProfit())
-                .period(f.getPeriod())
+                .revenue(c.getRevenue())
+                .profit(c.getProfit())
+                .period(c.getFinancialPeriod())
                 .build();
     }
 
@@ -84,7 +84,7 @@ public class CompanyMapper {
      * 供 CompanyAnalysisService 构造维度 VO 使用。
      */
     public CompanyDimensionVO buildDimension(String title, String icon, String color,
-                                              String summary, java.util.List<String> keyPoints) {
+                                              String summary, List<String> keyPoints) {
         return CompanyDimensionVO.builder()
                 .title(title)
                 .icon(icon)

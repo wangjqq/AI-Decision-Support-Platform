@@ -1,6 +1,12 @@
 import { useEffect } from 'react'
 import { Modal, Form, Input, DatePicker, Select, InputNumber, message } from 'antd'
-import { useCreateCompanyMutation, useUpdateCompanyMutation, type CompanyCreateRequest, type CompanyUpdateRequest, type CompanyFinancial } from '../../../api/companyApi'
+import {
+  useCreateCompanyMutation,
+  useUpdateCompanyMutation,
+  type CompanyCreateRequest,
+  type CompanyUpdateRequest,
+  type CompanyFinancial,
+} from '../../../api/companyApi'
 import { useAppDispatch, useAppSelector } from '../../../hooks/redux'
 import { closeEditor } from '../../../stores/slices/companySlice'
 import dayjs, { type Dayjs } from 'dayjs'
@@ -50,9 +56,7 @@ const CompanyCreateModal = () => {
         mainBusiness: editingCompany.mainBusiness,
         business: editingCompany.business,
         address: editingCompany.address,
-        establishedAt: editingCompany.establishedAt
-          ? dayjs(editingCompany.establishedAt)
-          : undefined,
+        establishedAt: editingCompany.establishedAt ? dayjs(editingCompany.establishedAt) : undefined,
         description: editingCompany.description,
         financialRevenue: editingCompany.financial?.revenue,
         financialProfit: editingCompany.financial?.profit,
@@ -67,9 +71,7 @@ const CompanyCreateModal = () => {
   const handleOk = async () => {
     try {
       const values = await form.validateFields()
-      const business = (values.business ?? []).filter(
-        (b): b is string => typeof b === 'string' && b.trim().length > 0,
-      )
+      const business = (values.business ?? []).filter((b): b is string => typeof b === 'string' && b.trim().length > 0)
       const financial: CompanyFinancial | undefined =
         values.financialRevenue != null || values.financialProfit != null || values.financialPeriod
           ? {
@@ -125,7 +127,10 @@ const CompanyCreateModal = () => {
         <Form.Item
           label="公司名称"
           name="name"
-          rules={[{ required: true, message: '请输入公司名称' }, { max: 100, message: '不超过 100 字' }]}>
+          rules={[
+            { required: true, message: '请输入公司名称' },
+            { max: 100, message: '不超过 100 字' },
+          ]}>
           <Input placeholder="如：深圳市英维克科技股份有限公司" />
         </Form.Item>
         <Form.Item label="股票代码" name="code" rules={[{ max: 16, message: '不超过 16 位' }]}>
@@ -140,10 +145,7 @@ const CompanyCreateModal = () => {
           ]}>
           <Input placeholder="如：91440300192174925W" maxLength={18} />
         </Form.Item>
-        <Form.Item
-          label="所属行业"
-          name="industryId"
-          rules={[{ required: true, message: '请选择所属行业' }]}>
+        <Form.Item label="所属行业" name="industryId" rules={[{ required: true, message: '请选择所属行业' }]}>
           <Select options={INDUSTRY_OPTIONS} placeholder="请选择" />
         </Form.Item>
         <Form.Item label="细分行业" name="industry" rules={[{ max: 64, message: '不超过 64 字' }]}>
@@ -152,16 +154,14 @@ const CompanyCreateModal = () => {
         <Form.Item
           label="主营业务"
           name="mainBusiness"
-          rules={[{ required: true, message: '请输入主营业务' }, { max: 500, message: '不超过 500 字' }]}>
+          rules={[
+            { required: true, message: '请输入主营业务' },
+            { max: 500, message: '不超过 500 字' },
+          ]}>
           <Input.TextArea rows={2} placeholder="如：机房精密温控、液冷散热系统、新能源汽车热管理" />
         </Form.Item>
         <Form.Item label="业务板块" name="business" tooltip="按回车添加多个业务板块">
-          <Select
-            mode="tags"
-            placeholder="如：机房温控、液冷散热"
-            tokenSeparators={[',', '，']}
-            maxTagCount={6}
-          />
+          <Select mode="tags" placeholder="如：机房温控、液冷散热" tokenSeparators={[',', '，']} maxTagCount={6} />
         </Form.Item>
         <Form.Item label="注册地址" name="address" rules={[{ max: 200, message: '不超过 200 字' }]}>
           <Input placeholder="如：广东省深圳市龙华区..." />

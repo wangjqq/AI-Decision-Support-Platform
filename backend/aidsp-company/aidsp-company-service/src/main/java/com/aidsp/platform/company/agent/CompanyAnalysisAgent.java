@@ -5,8 +5,6 @@ import com.aidsp.platform.analysis.api.AnalysisQueryRequest;
 import com.aidsp.platform.analysis.api.AnalysisResultDTO;
 import com.aidsp.platform.analysis.api.AnalysisType;
 import com.aidsp.platform.company.api.CompanyDimensionVO;
-import com.aidsp.platform.company.service.CompanyMapper;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Service;
@@ -26,11 +24,8 @@ import java.util.concurrent.ThreadLocalRandom;
  */
 @Slf4j
 @Service
-@RequiredArgsConstructor
 @ConditionalOnProperty(name = "aidsp.agent.mock-only", havingValue = "true")
 public class CompanyAnalysisAgent implements AnalysisAgent {
-
-    private final CompanyMapper companyMapper;
 
     @Override
     public AnalysisType supports() {

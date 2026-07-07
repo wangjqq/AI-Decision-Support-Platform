@@ -12,7 +12,7 @@ import com.aidsp.platform.company.api.CompanyDimensionVO;
 import com.aidsp.platform.company.entity.Company;
 import com.aidsp.platform.company.entity.CompanyAnalysisResult;
 import com.aidsp.platform.company.repository.CompanyAnalysisRepository;
-import com.aidsp.platform.company.repository.CompanyRepository;
+import com.aidsp.platform.company.repository.CompanyMapper;
 import com.aidsp.platform.core.api.PageResponse;
 import com.aidsp.platform.core.exception.BusinessException;
 import com.aidsp.platform.core.exception.ErrorCode;
@@ -26,7 +26,6 @@ import java.time.format.DateTimeFormatter;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 公司分析服务。
@@ -42,17 +41,19 @@ public class CompanyAnalysisService {
 
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("yyyyMMdd");
 
-    private final CompanyRepository companyRepository;
+    private final CompanyMapper companyMapper;          // MyBatis-Plus
     private final CompanyAnalysisRepository analysisRepository;
     private final CompanyAnalysisAgent agent;
-    private final CompanyMapper companyMapper;
+    private final CompanyVoConverter companyVoConverter; // Entity ↔ VO
 
     /**
      * 触发一次公司分析。
      */
     public CompanyAnalysisResultVO analyze(Long companyId, CompanyAnalysisRequest request) {
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
+        Company company = companyMapper.selectById(companyId);
+        if (company == null) {
+            throw new BusinessException(ErrorCode.COMPANY_NOT_FOUND);
+        }
 
         AnalysisQueryRequest aqr = new AnalysisQueryRequest();
         aqr.setQuery(request == null || request.getQuery() == null || request.getQuery().isBlank()
@@ -61,7 +62,6 @@ public class CompanyAnalysisService {
         aqr.setTopK(request == null || request.getTopK() == null ? 5 : request.getTopK());
         aqr.setContext(request == null ? null : request.getContext());
 
-        // 同步调用（Agent 内部已用 Thread.sleep 模拟 1000-1800ms）
         AnalysisResultDTO raw = agent.run(aqr);
         Map<String, Object> r = raw.getResult() == null ? Collections.emptyMap() : raw.getResult();
 
@@ -80,18 +80,18 @@ public class CompanyAnalysisService {
         analysisRepository.save(result);
         log.info("[CompanyAnalysisService] companyId={} analysisId={} tookMs={}",
                 companyId, result.getAnalysisId(), result.getTookMs());
-        return companyMapper.toAnalysisVO(result);
+        return companyVoConverter.toAnalysisVO(result);
     }
 
     /**
      * 按 analysisId 查询单次分析结果。
      */
     public CompanyAnalysisResultVO getById(Long companyId, String analysisId) {
-        // 校验公司存在
-        companyRepository.findById(companyId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
+        if (companyMapper.selectById(companyId) == null) {
+            throw new BusinessException(ErrorCode.COMPANY_NOT_FOUND);
+        }
         return analysisRepository.findById(analysisId)
-                .map(companyMapper::toAnalysisVO)
+                .map(companyVoConverter::toAnalysisVO)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_ANALYSIS_NOT_FOUND));
     }
 
@@ -99,8 +99,9 @@ public class CompanyAnalysisService {
      * 分页查询某公司的分析历史。
      */
     public PageResponse<CompanyAnalysisHistoryItemVO> pageHistory(Long companyId, Long page, Long size) {
-        companyRepository.findById(companyId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
+        if (companyMapper.selectById(companyId) == null) {
+            throw new BusinessException(ErrorCode.COMPANY_NOT_FOUND);
+        }
         return analysisRepository.pageByCompany(companyId, page, size);
     }
 
@@ -108,8 +109,9 @@ public class CompanyAnalysisService {
      * 删除某次分析记录。
      */
     public void deleteAnalysis(Long companyId, String analysisId) {
-        companyRepository.findById(companyId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
+        if (companyMapper.selectById(companyId) == null) {
+            throw new BusinessException(ErrorCode.COMPANY_NOT_FOUND);
+        }
         boolean removed = analysisRepository.deleteById(analysisId);
         if (!removed) {
             throw new BusinessException(ErrorCode.COMPANY_ANALYSIS_NOT_FOUND);
